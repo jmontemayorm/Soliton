@@ -100,3 +100,5 @@ for nn = 2:size(psi,3)
     fprintf('%f\n',sum(sum(abs(psi).^2)))
 end
 fprintf('Finished displaying propagation.\n')
+
+% Make multiple

@@ -1,4 +1,4 @@
-%% Non-Lineal Schrödinger Equation (NLSE)
+%% Non-Lineal SchrÃ¶dinger Equation (NLSE)
 %
 %   dP   1 d^2P   1 d^2P
 %  i-- + - ---- + - ---- + |P|^2 P = 0
@@ -22,15 +22,15 @@ end
 % 5 = sum(sech(r@(x0,y0))*exp(2i*pi*alphaVec), momentum p = -1,0,1), circle r0
 % 6 = 5, but ellipse with semi-x and semi-y axes sX and sY
 % 7 = special case
-beamProfile = 7;
+beamProfile = 5;
 numOfSol = 6;
-r0 = 5;
-alpha = pi;
+r0 = 3;
+alpha = 1;
 alphaVec = alpha*ones(1,numOfSol); %linspace(0,2*pi*(1-1/numOfSol),numOfSol);
 alphaVec(2:2:end) = 0; % Alternate values
 sX = 5; % Horizontal "radius" (ellipse)
 sY = 4; % Vertical "radius" (ellipse)
-p = 0; % Momentum (+1,0,-1)
+p = 0.5; % Momentum (+1,0,-1)
 x0_1 = 1.5;
 y0_1 = 1.5;
 x0_2 = -1.5;
@@ -112,7 +112,7 @@ fprintf('Finished defining spaces.\n')
 %% Propagation
 
 idz = 1i*dz; % Combined factor
-Kxy2 = Kxx.^2 + Kyy.^2; % Sum of squared K's %%%%%%%%% WHATS WRONG HERE???
+Kxy2 = Kxx.^2 + Kyy.^2; % Sum of squared K's
 expKxy2 = exp(-idz*Kxy2*0.5); % exp precaulculated for faster calculations
 linStep = true; % To choose next step type
 tempPsi = complex(zeros(size(psi,1),size(psi,2),2)); % Temporal variable to propagate
