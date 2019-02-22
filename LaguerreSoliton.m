@@ -17,8 +17,11 @@ dx = x(2)-x(1);
 y = x;
 dy = dx;
 
-[xx,yy] = meshgrid(x,y);
+[xx,yy] = meshgrid(x-2,y);
 r = sqrt(xx.^2+yy.^2);
+
+[xx_1,yy_1] = meshgrid(x+2,y);
+r_1 = sqrt(xx_1.^2+yy_1.^2);
 
 limitZ = 6;
 dz = dx^2/8;
@@ -27,17 +30,22 @@ z = 0:dz*sampLeng:(limitZ+dz*sampLeng);
 
 % Mode, initial amplitude and omega_0
 n = 0;
-m = 1;
+m = 0;
 A0 = 1;
 w0 = 1;
 [theta,~] = cart2pol(xx,yy);
+[theta_1,~] = cart2pol(xx_1,yy_1);
 
 % Psi
 psi = complex(zeros([length(x),length(y),length(z)]));
 
 rw0 = (r/w0);
-psi(:,:,1) = A0 * (rw0).^m .* laguerreL(n,2*rw0.^2).^m .* exp(-rw0.^2 + 1i*(m*theta)); % Incomplete
-V = -(abs(psi(:,:,1)).^2) + 4*n + 2*m + 2 - 2*r.^2;
+rw0_1 = (r_1/w0);
+psi_0 = A0 * (rw0).^m .* laguerreL(n,2*rw0.^2).^m .* exp(-rw0.^2 + 1i*(m*theta));
+psi_1 = A0 * (rw0_1).^m .* laguerreL(n,2*rw0_1.^2).^m .* exp(-rw0_1.^2 + 1i*(m*theta_1));
+
+psi(:,:,1) =  psi_0 + psi_1;
+V = -(abs(psi(:,:,1)).^2) + 4*n + 2*m + 2 - 2*r.^2 - 2*r_1.^2;
 
 Kx = linspace(-numOfPoints/2,numOfPoints/2-1,numOfPoints)'*(2*pi/(2*windowSize));
 Ky = Kx;
@@ -93,12 +101,10 @@ colorbar
 set(gca,'Ydir','normal')
 for nn = 2:size(psi,3)
     pause(0.01)
-    imagesc(x,y,angle(psi(:,:,nn)))
+    imagesc(x,y,abs(psi(:,:,nn)))
     title(sprintf('n = %i',nn))
     colorbar
     set(gca,'Ydir','normal')
-    fprintf('%f\n',sum(sum(abs(psi).^2)))
+    %fprintf('%f\n',sum(sum(abs(psi).^2)))
 end
 fprintf('Finished displaying propagation.\n')
-
-% Make multiple
