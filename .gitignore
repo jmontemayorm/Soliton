@@ -1,0 +1,6 @@
+# Ignore Output folder
+Output/
+
+# Ignore MATLAB's autosave files
+*.m~
+*.asv

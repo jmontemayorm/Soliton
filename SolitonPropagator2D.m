@@ -12,11 +12,11 @@ function [psi] = SolitonPropagator2D(psi,V,windowSize,dz,doubleSteps)
     
     % Pre-calculate repeated values
     idz = 1i*dz; % Combined factor
-    expKxy2 = exp(-idz*Kxy2*0.5); % exp precaulculated for faster calculations
+    expKxy2 = fftshift(exp(-idz*Kxy2*0.5)); % exp precaulculated for faster calculations
     
     % Propagator
     for n = 1:doubleSteps
         % Split-step: nonlinear, then linear, two dz propagation
-        psi = ifft2(ifftshift(expKxy2.*fftshift(fft2(exp(idz*(abs(psi).^2+V)).*psi))));
+        psi = ifft2(expKxy2.*fft2(exp(idz*(abs(psi).^2+V)).*psi));
     end
 end

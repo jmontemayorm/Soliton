@@ -42,10 +42,10 @@ psi = complex(zeros([length(x),length(y),length(z)]));
 rw0 = (r/w0);
 rw0_1 = (r_1/w0);
 psi_0 = A0 * (rw0).^m .* laguerreL(n,2*rw0.^2).^m .* exp(-rw0.^2 + 1i*(m*theta));
-psi_1 = A0 * (rw0_1).^m .* laguerreL(n,2*rw0_1.^2).^m .* exp(-rw0_1.^2 + 1i*(m*theta_1));
+%psi_1 = A0 * (rw0_1).^m .* laguerreL(n,2*rw0_1.^2).^m .* exp(-rw0_1.^2 + 1i*(m*theta_1));
 
-psi(:,:,1) =  psi_0 + psi_1;
-V = -(abs(psi(:,:,1)).^2) + 4*n + 2*m + 2 - 2*r.^2 - 2*r_1.^2;
+psi(:,:,1) =  psi_0;% + psi_1;
+V = -(abs(psi(:,:,1)).^2) + 4*n + 2*m + 2 - 2*r.^2;% - 2*r_1.^2;
 
 Kx = linspace(-numOfPoints/2,numOfPoints/2-1,numOfPoints)'*(2*pi/(2*windowSize));
 Ky = Kx;
@@ -57,7 +57,7 @@ fprintf('Finished defining spaces.\n')
 
 idz = 1i*dz; % Combined factor
 Kxy2 = Kxx.^2 + Kyy.^2; % Sum of squared K's %%%%%%%%% WHATS WRONG HERE???
-expKxy2 = exp(-idz*Kxy2*0.5); % exp precaulculated for faster calculations
+expKxy2 = fftshift(exp(-idz*Kxy2*0.5)); % exp precaulculated for faster calculations
 linStep = true; % To choose next step type
 tempPsi = complex(zeros(size(psi,1),size(psi,2),2)); % Temporal variable to propagate
 tempPsi(:,:,1) = psi(:,:,1);
@@ -70,7 +70,7 @@ for n = 2:steps
     for m = 1:sampLeng
         % Split-step control, propagate
         if linStep % Lineal step
-            tempPsi(:,:,2) = ifft2(ifftshift(expKxy2.*fftshift(fft2(tempPsi(:,:,1)))));
+            tempPsi(:,:,2) = ifft2((expKxy2.*(fft2(tempPsi(:,:,1)))));
             linStep = false;
         else % Non-lineal step
             tempPsi(:,:,2) = exp(idz*(abs(tempPsi(:,:,1)).^2+V+20)).*tempPsi(:,:,1);
