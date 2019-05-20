@@ -103,6 +103,8 @@ switch beamProfile
         end
 end
 
+psi(:,:,1) = fU;
+
 Kx = linspace(-numOfPoints/2,numOfPoints/2-1,numOfPoints)'*(2*pi/(2*limitX));
 Ky = Kx;
 [Kxx,Kyy] = meshgrid(Kx,Ky);
@@ -129,7 +131,7 @@ for n = 2:steps
             tempPsi(:,:,2) = ifft2(ifftshift(expKxy2.*fftshift(fft2(tempPsi(:,:,1)))));
             linStep = false;
         else % Non-lineal step
-            tempPsi(:,:,2) = exp(idz*abs(tempPsi(:,:,1)).^2).*tempPsi(:,:,1);
+            tempPsi(:,:,2) = exp(idz*abs(tempPsi(:,:,1)).^2 ./ (1 + 0.02 * abs(tempPsi(:,:,1)).^2)).*tempPsi(:,:,1);
             linStep = true;
         end
         

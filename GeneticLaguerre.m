@@ -6,7 +6,6 @@
 %
 
 %% Settings
-
 % Genetic settings
 finalGeneration = 500;
 populationSize = 30; % Must be an even number, better if multiple of cores
@@ -98,9 +97,6 @@ for generation = 1:finalGeneration
     parfor (specimen = 1:populationSize, maxWorkers)
         psi_results{specimen} = SolitonPropagator2D(psi_base,V{specimen},windowSize,dz,doubleSteps)
         specimen_fitness(specimen) = sum(sum(abs(abs(psi_results{specimen}) - abs(psi_base))));
-        
-        
-        
     end
     fprintf('Finished soliton propagation.\n');
     
