@@ -31,7 +31,7 @@ populationSize = 100;
 
 % Mutation
 paternalProbability = 0.6;
-mutationProbability = 0.05;
+mutationProbability = 0.005;
 
 % Generations
 enableMaxGenerations = 1;
